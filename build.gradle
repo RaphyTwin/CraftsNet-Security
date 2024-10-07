@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group = 'de.craftsblock.craftsnet'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.craftsblock.de/releases" }
+    maven { url "https://repo.craftsblock.de/experimental" }
+}
+
+dependencies {
+    // CraftsBlock dependencies ----------------------------------------------------------------------------------------
+
+    implementation "de.craftsblock.craftscore:CraftsCore:3.7.57-SNAPSHOT"
+    implementation "de.craftsblock:craftsnet:3.0.7_6-EXPERIMENTAL"
+
+    // Third party dependencies ----------------------------------------------------------------------------------------
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.11.0'
+}
