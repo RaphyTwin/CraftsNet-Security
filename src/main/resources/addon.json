@@ -1,5 +1,13 @@
 {
   "name": "AccessController",
-  "main": "de.craftsblock.craftsnet.module.accesscontroller",
-  "version": "1.0.0"
+  "main": "de.craftsblock.craftsnet.module.accesscontroller.AccessControllerAddon",
+  "authors": [
+    "Philipp Maywald",
+    "CraftsBlock"
+  ],
+  "website": "https://craftsblock.de",
+  "version": "1.0.0",
+  "dependencies": [
+    "org.springframework.security:spring-security-crypto:6.3.0"
+  ]
 }
