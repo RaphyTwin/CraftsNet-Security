@@ -1,116 +1,115 @@
 package de.craftsblock.craftsnet.module.accesscontroller.api.auth.token;
 
 import de.craftsblock.craftscore.json.Json;
+import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.craftsnet.module.accesscontroller.api.entity.Entity;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
- * This class represents a set of permissions based on path and domain patterns,
- * encapsulated in a record with two lists of regular expression patterns.
- * The patterns control which paths and domains are allowed or wildcarded for
- * a given token.
+ * This class represents a permission model for a token, defining access
+ * control based on a combination of path patterns, domain patterns, and HTTP methods.
  *
- * @param paths   a list of regular expression patterns representing allowed paths.
- * @param domains a list of regular expression patterns representing allowed domains.
+ * @param path    a regular expression pattern representing the allowed path.
+ * @param domain  a regular expression pattern representing the allowed domain.
+ * @param methods a variable number of {@link HttpMethod} values representing
+ *                the allowed HTTP methods (e.g., GET, POST).
  * @author Philipp Maywald
  * @author CraftsBlock
- * @version 1.0.0
+ * @version 1.1.0
  * @since 1.0.0
  */
-record TokenPermission(List<Pattern> paths, List<Pattern> domains) implements Entity {
+record TokenPermission(Pattern path, Pattern domain, HttpMethod... methods) implements Entity {
 
     /**
-     * Checks if any of the provided patterns are a wildcard pattern.
+     * Checks if a given pattern is a wildcard pattern.
      * A pattern is considered a wildcard if it is "*" or ".*".
      *
-     * @param patterns the list of patterns to check.
-     * @return {@code true} if any pattern is a wildcard, {@code false} otherwise.
+     * @param pattern the pattern to check.
+     * @return {@code true} if the pattern is a wildcard, {@code false} otherwise.
      */
-    private boolean isWildcard(List<Pattern> patterns) {
-        return patterns.stream().anyMatch(pattern -> pattern.pattern().equals("*") || pattern.pattern().equals(".*"));
+    private boolean isWildcard(Pattern pattern) {
+        return pattern.pattern().equals("*") || pattern.pattern().equals(".*");
     }
 
     /**
-     * Determines if a given value is allowed by any pattern in the provided list.
-     * The value is allowed if it matches any of the patterns.
+     * Checks if a given value is allowed by matching it against the provided pattern.
      *
-     * @param value    the string value to check.
-     * @param patterns the list of patterns to match against.
-     * @return {@code true} if the value matches any pattern, {@code false} otherwise.
+     * @param value   the value to be checked (e.g., a path or domain).
+     * @param pattern the pattern to match against.
+     * @return {@code true} if the value matches the pattern, {@code false} otherwise.
      */
-    private boolean isAllowed(String value, List<Pattern> patterns) {
-        return patterns.stream().anyMatch(pattern -> pattern.matcher(value).matches());
+    private boolean isAllowed(String value, Pattern pattern) {
+        return pattern.matcher(value).matches();
     }
 
     /**
-     * Checks if the path patterns include a wildcard pattern.
+     * Checks if the path pattern is a wildcard.
      *
-     * @return {@code true} if the path patterns include a wildcard, {@code false} otherwise.
+     * @return {@code true} if the path pattern is a wildcard, {@code false} otherwise.
      */
     boolean isPathWildcard() {
-        return isWildcard(paths());
+        return isWildcard(path());
     }
 
     /**
-     * Determines if a given path is allowed based on the path patterns.
-     * A path is allowed if it matches any of the patterns or if the patterns
-     * include a wildcard.
+     * Determines if a given path is allowed based on the defined path pattern.
+     * A path is allowed if it either matches the pattern or if the pattern is a wildcard.
      *
      * @param path the path to check.
      * @return {@code true} if the path is allowed, {@code false} otherwise.
      */
     boolean isPathAllowed(String path) {
-        return isPathWildcard() || isAllowed(path, paths());
+        return isPathWildcard() || isAllowed(path, path());
     }
 
     /**
-     * Checks if the domain patterns include a wildcard pattern.
+     * Checks if the domain pattern is a wildcard.
      *
-     * @return {@code true} if the domain patterns include a wildcard, {@code false} otherwise.
+     * @return {@code true} if the domain pattern is a wildcard, {@code false} otherwise.
      */
     boolean isDomainWildcard() {
-        return isWildcard(domains());
+        return isWildcard(domain());
     }
 
     /**
-     * Determines if a given domain is allowed based on the domain patterns.
-     * A domain is allowed if it matches any of the patterns or if the patterns
-     * include a wildcard.
+     * Determines if a given domain is allowed based on the defined domain pattern.
+     * A domain is allowed if it either matches the pattern or if the pattern is a wildcard.
      *
      * @param domain the domain to check.
      * @return {@code true} if the domain is allowed, {@code false} otherwise.
      */
     boolean isDomainAllowed(String domain) {
-        return isDomainWildcard() || isAllowed(domain, domains());
+        return isDomainWildcard() || isAllowed(domain, domain());
     }
 
     /**
-     * Serializes the current {@link TokenPermission} object into a {@link Json} object.
-     * The serialization includes converting the patterns into their string representation.
+     * Serializes the {@link TokenPermission} object into a {@link Json} object.
+     * The serialization includes the path, domain, and allowed HTTP methods.
      *
-     * @return a {@link Json} object containing the serialized paths and domains.
+     * @return a {@link Json} object representing the serialized permission details.
      */
     @Override
     public Json serialize() {
         return Json.empty()
-                .set("paths", paths().stream().map(Pattern::pattern).toList())
-                .set("domains", domains().stream().map(Pattern::pattern).toList());
+                .set("path", path())
+                .set("domain", domain())
+                .set("methods", Arrays.stream(methods()).map(HttpMethod::name).toList());
     }
 
     /**
      * Constructs a {@link TokenPermission} object from a {@link Json} object.
-     * The JSON should contain lists of paths and domains as regular expressions
-     * in string format, which will be compiled into patterns.
+     * The JSON must contain the path, domain, and allowed HTTP methods.
      *
-     * @param json the {@link Json} object containing the paths and domains.
-     * @return a new {@link TokenPermission} object based on the provided JSON data.
+     * @param json the {@link Json} object containing the permission data.
+     * @return a new {@code TokenPermission} object based on the provided JSON data.
      */
     static TokenPermission of(Json json) {
         return new TokenPermission(
-                json.getStringList("paths").stream().map(Pattern::compile).toList(),
-                json.getStringList("domains").stream().map(Pattern::compile).toList()
+                Pattern.compile(json.getString("path")),
+                Pattern.compile(json.getString("domain")),
+                json.getStringList("methods").stream().map(HttpMethod::parse).toArray(HttpMethod[]::new)
         );
     }
 

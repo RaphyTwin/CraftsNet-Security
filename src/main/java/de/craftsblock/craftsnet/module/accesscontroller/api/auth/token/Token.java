@@ -8,22 +8,23 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a token entity that holds information such as
  * the token ID, hash, expiration time, and associated permissions.
  * It also provides functionality for validation and serialization.
  *
- * @param id         the unique identifier of the token.
- * @param hash       the hashed value of the token secret.
- * @param expires    the expiration time of the token in milliseconds since epoch.
- * @param permission the {@link TokenPermission} object defining access control rules for the token.
+ * @param id          the unique identifier of the token.
+ * @param hash        the hashed value of the token secret.
+ * @param expires     the expiration time of the token in milliseconds since epoch.
+ * @param permissions a list of {@link TokenPermission}, defining access control rules for the token.
  * @author Philipp Maywald
  * @author CraftsBlock
  * @version 1.0.0
  * @since 1.0.0
  */
-public record Token(long id, String hash, long expires, TokenPermission permission) implements Entity {
+public record Token(long id, String hash, long expires, List<TokenPermission> permissions) implements Entity {
 
     /**
      * Validates if the given secret matches the hashed secret stored in the token.
@@ -57,7 +58,7 @@ public record Token(long id, String hash, long expires, TokenPermission permissi
         json.set("id", id);
         json.set("hash", hash);
         json.set("expires", expires);
-        json.set("permission", permission.serialize());
+        json.set("permissions", permissions.stream().map(TokenPermission::serialize).map(Json::getObject).toList());
         return json;
     }
 
@@ -70,7 +71,7 @@ public record Token(long id, String hash, long expires, TokenPermission permissi
      */
     public static Token of(Json json) {
         return of(json.getLong("id"), json.getString("hash"), json.getLong("expires"),
-                TokenPermission.of(json.getJson("permission")));
+                json.getJsonList("permissions").stream().map(TokenPermission::of).toList());
     }
 
     /**
@@ -83,21 +84,21 @@ public record Token(long id, String hash, long expires, TokenPermission permissi
      * @return a new {@link Token} object.
      */
     public static Token of(String hash, long expires) {
-        return of(Snowflake.generate(), hash, expires, new TokenPermission(new ArrayList<>(), new ArrayList<>()));
+        return of(Snowflake.generate(), hash, expires, new ArrayList<>());
     }
 
     /**
      * A private factory method for creating a {@link  Token} object with specified
      * ID, hash, expiration time, and permissions.
      *
-     * @param id         the unique identifier of the token.
-     * @param hash       the hashed token secret.
-     * @param expires    the expiration time in milliseconds since epoch.
-     * @param permission the {@link TokenPermission} associated with this token.
+     * @param id          the unique identifier of the token.
+     * @param hash        the hashed token secret.
+     * @param expires     the expiration time in milliseconds since epoch.
+     * @param permissions a list of {@link TokenPermission} associated with this token.
      * @return a new {@link Token} object.
      */
-    static Token of(long id, String hash, long expires, TokenPermission permission) {
-        return new Token(id, hash, expires, permission);
+    static Token of(long id, String hash, long expires, List<TokenPermission> permissions) {
+        return new Token(id, hash, expires, permissions);
     }
 
 }
