@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @version 1.1.0
  * @since 1.0.0
  */
-record TokenPermission(Pattern path, Pattern domain, HttpMethod... methods) implements Entity {
+public record TokenPermission(Pattern path, Pattern domain, HttpMethod... methods) implements Entity {
 
     /**
      * Checks if a given pattern is a wildcard pattern.

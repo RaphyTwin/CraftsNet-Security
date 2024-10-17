@@ -21,7 +21,7 @@ import java.util.List;
  * @param permissions a list of {@link TokenPermission}, defining access control rules for the token.
  * @author Philipp Maywald
  * @author CraftsBlock
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public record Token(long id, String hash, long expires, List<TokenPermission> permissions) implements Entity {
@@ -71,7 +71,7 @@ public record Token(long id, String hash, long expires, List<TokenPermission> pe
      */
     public static Token of(Json json) {
         return of(json.getLong("id"), json.getString("hash"), json.getLong("expires"),
-                json.getJsonList("permissions").stream().map(TokenPermission::of).toList());
+                new ArrayList<>(json.getJsonList("permissions").stream().map(TokenPermission::of).toList()));
     }
 
     /**
