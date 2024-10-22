@@ -101,7 +101,7 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
             Token token = Token.of(hash);
             token.permissions().addAll(permissions);
 
-            return Map.entry(secret, token);
+            return Map.entry("cnet_" + Long.toHexString(token.id()) + secret, token);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
