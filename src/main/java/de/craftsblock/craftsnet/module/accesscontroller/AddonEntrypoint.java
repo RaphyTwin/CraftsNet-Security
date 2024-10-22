@@ -17,7 +17,7 @@ import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token.TokenMan
  * @version 1.0.0
  * @since 1.0.0-SNAPSHOT
  */
-public class AccessControllerAddon extends Addon {
+public class AddonEntrypoint extends Addon {
 
     /**
      * Called when the addon is loaded.

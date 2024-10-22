@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AccessController {
 
-    private static AccessControllerAddon controllerAddon;
+    private static AddonEntrypoint controllerAddon;
 
     private static final ConcurrentHashMap<Class<? extends Manager>, Manager> managers = new ConcurrentHashMap<>();
 
@@ -24,18 +24,18 @@ public class AccessController {
      * Sets the AccessControllerAddon for this AccessController.
      * This method is intended to be used internally by the system.
      *
-     * @param controllerAddon The instance of {@link AccessControllerAddon} to be set.
+     * @param controllerAddon The instance of {@link AddonEntrypoint} to be set.
      */
-    protected static void setControllerAddon(AccessControllerAddon controllerAddon) {
+    protected static void setControllerAddon(AddonEntrypoint controllerAddon) {
         AccessController.controllerAddon = controllerAddon;
     }
 
     /**
-     * Retrieves the currently set {@link AccessControllerAddon} instance.
+     * Retrieves the currently set {@link AddonEntrypoint} instance.
      *
-     * @return The current {@link AccessControllerAddon}, or null if none has been set.
+     * @return The current {@link AddonEntrypoint}, or null if none has been set.
      */
-    public static AccessControllerAddon getControllerAddon() {
+    public static AddonEntrypoint getControllerAddon() {
         return controllerAddon;
     }
 
