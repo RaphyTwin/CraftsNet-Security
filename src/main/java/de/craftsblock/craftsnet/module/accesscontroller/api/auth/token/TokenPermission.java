@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * @author Philipp Maywald
  * @author CraftsBlock
  * @version 1.1.0
- * @since 1.0.0
+ * @since 1.0.0-SNAPSHOT
  */
 public record TokenPermission(Pattern path, Pattern domain, HttpMethod... methods) implements Entity {
 
