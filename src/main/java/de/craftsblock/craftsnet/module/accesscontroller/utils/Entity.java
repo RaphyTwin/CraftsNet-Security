@@ -1,4 +1,4 @@
-package de.craftsblock.craftsnet.module.accesscontroller.entity;
+package de.craftsblock.craftsnet.module.accesscontroller.utils;
 
 import de.craftsblock.craftscore.json.Json;
 
