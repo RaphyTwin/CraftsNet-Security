@@ -1,8 +1,8 @@
 package de.craftsblock.craftsnet.module.accesscontroller;
 
-import de.craftsblock.craftsnet.module.accesscontroller.api.Manager;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.AuthChainManager;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token.TokenManager;
+import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
 
 import java.util.concurrent.ConcurrentHashMap;
 

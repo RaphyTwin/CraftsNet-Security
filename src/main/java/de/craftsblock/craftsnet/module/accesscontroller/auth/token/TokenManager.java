@@ -1,12 +1,10 @@
-package de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token;
+package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
 
 import com.google.gson.JsonElement;
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftscore.json.JsonParser;
 import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.api.Manager;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.token.Token;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.token.TokenPermission;
+import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
 import de.craftsblock.craftsnet.utils.Utils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

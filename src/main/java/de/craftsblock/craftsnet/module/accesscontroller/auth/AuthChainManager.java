@@ -1,7 +1,7 @@
-package de.craftsblock.craftsnet.module.accesscontroller.impl.auth;
+package de.craftsblock.craftsnet.module.accesscontroller.auth;
 
-import de.craftsblock.craftsnet.module.accesscontroller.api.Manager;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.chains.AuthChain;
+import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.AuthChain;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

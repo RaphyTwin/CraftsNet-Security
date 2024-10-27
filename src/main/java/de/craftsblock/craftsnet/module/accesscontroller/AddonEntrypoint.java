@@ -1,12 +1,12 @@
 package de.craftsblock.craftsnet.module.accesscontroller;
 
 import de.craftsblock.craftsnet.addon.Addon;
-import de.craftsblock.craftsnet.module.accesscontroller.common.listeners.PreRequestListener;
-import de.craftsblock.craftsnet.module.accesscontroller.common.listeners.SocketListener;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.AuthChainManager;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.SimpleAuthChain;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token.TokenAuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token.TokenManager;
+import de.craftsblock.craftsnet.module.accesscontroller.listeners.PreRequestListener;
+import de.craftsblock.craftsnet.module.accesscontroller.listeners.SocketListener;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.SimpleAuthChain;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenAuthAdapter;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
 
 /**
  * The AccessControllerAddon class extends the base {@link Addon} class to provide specific functionality

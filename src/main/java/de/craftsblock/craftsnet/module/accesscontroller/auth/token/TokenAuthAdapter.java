@@ -1,10 +1,9 @@
-package de.craftsblock.craftsnet.module.accesscontroller.impl.auth.token;
+package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
 
 import de.craftsblock.craftsnet.api.http.Request;
 import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.AuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.AuthResult;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.token.Token;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**

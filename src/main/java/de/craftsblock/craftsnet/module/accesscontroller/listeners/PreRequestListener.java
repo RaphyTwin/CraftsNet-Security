@@ -1,4 +1,4 @@
-package de.craftsblock.craftsnet.module.accesscontroller.common.listeners;
+package de.craftsblock.craftsnet.module.accesscontroller.listeners;
 
 import de.craftsblock.craftscore.event.EventHandler;
 import de.craftsblock.craftscore.event.EventPriority;
@@ -7,8 +7,8 @@ import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.events.requests.PreRequestEvent;
 import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.AuthResult;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.chains.AuthChain;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.AuthChain;
 
 import java.io.IOException;
 

@@ -1,8 +1,8 @@
-package de.craftsblock.craftsnet.module.accesscontroller.api.auth.chains;
+package de.craftsblock.craftsnet.module.accesscontroller.auth.chains;
 
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.AuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.api.auth.AuthResult;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
 
 /**
  * The {@link AuthChain} class represents an authentication chain that manages multiple
