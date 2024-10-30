@@ -3,7 +3,11 @@ package de.craftsblock.craftsnet.module.accesscontroller.auth;
 import de.craftsblock.craftsnet.api.http.Request;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.AuthChain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The {@link SimpleAuthChain} class is a concrete implementation of the {@link AuthChain} class,
@@ -20,8 +24,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class SimpleAuthChain extends AuthChain {
 
-    // A thread-safe queue holding the list of authentication adapters.
     private final ConcurrentLinkedQueue<AuthAdapter> adapters = new ConcurrentLinkedQueue<>();
+    private final List<String> excluded = new ArrayList<>();
 
     /**
      * Authenticates the provided {@link Request} by passing it through the chain of
@@ -34,6 +38,10 @@ public class SimpleAuthChain extends AuthChain {
     @Override
     public AuthResult authenticate(final Request request) {
         final AuthResult result = new AuthResult();
+
+        Pattern pattern = Pattern.compile(String.join("|", excluded));
+        Matcher matcher = pattern.matcher(request.getUrl());
+        if (matcher.matches()) return result;
 
         // Iterate over each adapter in the chain and authenticate the request.
         for (AuthAdapter adapter : adapters) {
@@ -78,6 +86,24 @@ public class SimpleAuthChain extends AuthChain {
         adapters.stream()
                 .filter(adapter::isInstance)
                 .forEach(this::remove);
+    }
+
+    /**
+     * Adds a new url pattern to the exclusion list, preventing matching requests from undergoing authentication.
+     *
+     * @param pattern The exclusion pattern to add, typically a regex string matching URLs to exclude.
+     */
+    public void addExclusion(String pattern) {
+        excluded.add(pattern);
+    }
+
+    /**
+     * Removes an url pattern from the exclusion list, allowing matching requests to undergo authentication again.
+     *
+     * @param pattern The exclusion pattern to remove.
+     */
+    public void removeExclusion(String pattern) {
+        excluded.remove(pattern);
     }
 
 
