@@ -4,7 +4,7 @@ import de.craftsblock.craftsnet.addon.Addon;
 import de.craftsblock.craftsnet.module.accesscontroller.listeners.PreRequestListener;
 import de.craftsblock.craftsnet.module.accesscontroller.listeners.SocketListener;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.SimpleAuthChain;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.SimpleAuthChain;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenAuthAdapter;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
 
@@ -55,7 +55,7 @@ public class AddonEntrypoint extends Addon {
     public void onDisable() {
         AccessController.getTokenManager().save();
 
-        // Last thing to execute
+        // Unset the instance
         AccessController.setControllerAddon(null);
     }
 
