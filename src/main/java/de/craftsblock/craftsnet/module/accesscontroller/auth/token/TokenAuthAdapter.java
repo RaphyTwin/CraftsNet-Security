@@ -47,22 +47,25 @@ public class TokenAuthAdapter implements AuthAdapter {
     public void authenticate(AuthResult result, Request request) {
         // Retrieve the authorization header from the request
         String auth_header = request.getHeader(AUTH_HEADER);
-        // Check if the header is present and if the auth type is correct
-        if (auth_header == null || !auth_header.equalsIgnoreCase(AUTH_TYPE)) {
+
+        // Check if the header is present
+        if (auth_header == null) {
             failAuth(result, "Auth header not present or wrong auth type!");
             return;
         }
 
-        // Extract the token from the authorization header
-        String header = request.getHeaders().get(AUTH_HEADER).stream().filter(s -> s.startsWith("cnet_")).findFirst().orElse(null);
-        // Check if a valid token is present
-        if (header == null) {
+        // Split the auth header and check if it has two values and is of the correct type
+        String[] header = auth_header.split(" ");
+        if (header.length != 2 || !AUTH_TYPE.equalsIgnoreCase(header[0])) {
             failAuth(result, "No valid auth token present!");
             return;
         }
 
+        // Extract the token from the authorization header
+        String key = header[1];
+
         // Split the token into parts
-        String[] parts = header.split("_");
+        String[] parts = key.split("_");
         // Validate the number of parts in the token
         if (parts.length != 2) {
             failAuth(result, "No valid auth token present!");
