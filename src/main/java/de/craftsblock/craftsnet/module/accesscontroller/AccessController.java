@@ -1,9 +1,11 @@
 package de.craftsblock.craftsnet.module.accesscontroller;
 
-import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
+import de.craftsblock.craftscore.event.Event;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
+import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -83,6 +85,21 @@ public class AccessController {
      */
     public static AuthChainManager getAuthChainManager() {
         return getManager(AuthChainManager.class);
+    }
+
+    /**
+     * Dispatches the given event to the registered listeners via the listener registry.
+     * This method ensures that the AccessController addon is active before proceeding.
+     *
+     * @param event The event to be dispatched to the listeners.
+     * @throws IllegalStateException     If the AccessController addon is not active or not set.
+     * @throws InvocationTargetException If an error occurs while invoking a listener method.
+     * @throws IllegalAccessException    If a listener method cannot be accessed.
+     */
+    public static void callEvent(Event event) throws InvocationTargetException, IllegalAccessException {
+        if (getControllerAddon() == null)
+            throw new IllegalStateException("The addon instance has not been set! Is the AccessController addon active?");
+        getControllerAddon().craftsNet().listenerRegistry().call(event);
     }
 
 }
