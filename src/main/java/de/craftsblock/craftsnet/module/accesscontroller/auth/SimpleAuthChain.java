@@ -29,13 +29,16 @@ public class SimpleAuthChain extends AuthChain {
     private final List<String> excluded = new ArrayList<>();
 
     /**
-     * Authenticates the provided {@link Request} by passing it through the chain of
+     * Authenticates the provided {@link Exchange} by passing it through the chain of
      * registered {@link AuthAdapter} instances. If any adapter in the chain cancels the
      * authentication, the process stops.
      *
+     * @param exchange The {@link Exchange} object representing the incoming HTTP request.
      * @return The {@link AuthResult} object that contains the result of the authentication process.
      */
     @Override
+    public AuthResult authenticate(final Exchange exchange) {
+        final Request request = exchange.request();
         final AuthResult result = new AuthResult();
 
         Pattern pattern = Pattern.compile(String.join("|", excluded));

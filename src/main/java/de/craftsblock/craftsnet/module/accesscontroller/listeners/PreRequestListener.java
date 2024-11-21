@@ -32,7 +32,7 @@ public class PreRequestListener implements ListenerAdapter {
         // Iterate through each authentication chain
         for (AuthChain chain : AccessController.getAuthChainManager()) {
             // Authenticate the incoming request using the current chain
-            AuthResult result = chain.authenticate(exchange.request());
+            AuthResult result = chain.authenticate(exchange);
 
             // Check if the authentication was cancelled
             if (result.isCancelled()) {

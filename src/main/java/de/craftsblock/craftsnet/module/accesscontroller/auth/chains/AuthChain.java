@@ -1,6 +1,6 @@
 package de.craftsblock.craftsnet.module.accesscontroller.auth.chains;
 
-import de.craftsblock.craftsnet.api.http.Request;
+import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
 import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
 
@@ -20,14 +20,14 @@ import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
 public abstract class AuthChain {
 
     /**
-     * Authenticates the provided {@link Request} by passing it through the chain of registered
+     * Authenticates the provided {@link Exchange} by passing it through the chain of registered
      * {@link AuthAdapter} instances. Each adapter in the chain is responsible for determining
      * whether the request is authorized or not.
      *
-     * @param request The {@link Request} object representing the incoming HTTP request.
+     * @param exchange The {@link Exchange} object representing the incoming HTTP request.
      * @return The {@link AuthResult} object that contains the result of the authentication process.
      */
-    public abstract AuthResult authenticate(Request request);
+    public abstract AuthResult authenticate(Exchange exchange);
 
     /**
      * Appends a new {@link AuthAdapter} to the authentication chain. The adapter will be used
