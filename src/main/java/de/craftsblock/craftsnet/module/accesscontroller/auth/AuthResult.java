@@ -22,23 +22,20 @@ public class AuthResult {
     }
 
     /**
-     * Sets whether the authentication process was successful or not.
-     * If set to {@code false}, the process is considered cancelled.
-     *
-     * @param success {@code true} if the authentication was successful, {@code false} if cancelled.
+     * Cancels the authentication, setting the success state to {@code false}.
      */
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void cancel() {
+        this.success = false;
     }
 
     /**
-     * Sets the reason for cancelling the authentication process.
-     * This should be called when the authentication fails or is explicitly cancelled.
+     * Cancels the authentication with a specific reason.
      *
-     * @param cancelReason The reason for cancelling the authentication process.
+     * @param reason The reason for cancellation, providing context for the failure.
      */
-    public void setCancelReason(String cancelReason) {
-        this.cancelReason = cancelReason;
+    public void cancel(String reason) {
+        this.cancel();
+        this.cancelReason = reason;
     }
 
     /**
