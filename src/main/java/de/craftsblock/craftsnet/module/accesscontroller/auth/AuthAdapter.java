@@ -34,8 +34,7 @@ public interface AuthAdapter {
      * @param reason A string explaining why the authentication failed.
      */
     default void failAuth(AuthResult result, String reason) {
-        result.setSuccess(true);
-        result.setCancelReason(reason);
+        result.cancel(reason);
     }
 
 }
