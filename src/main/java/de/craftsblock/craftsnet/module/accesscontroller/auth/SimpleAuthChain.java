@@ -1,8 +1,8 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.chains;
+package de.craftsblock.craftsnet.module.accesscontroller.auth;
 
+import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
+import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.AuthChain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +33,9 @@ public class SimpleAuthChain extends AuthChain {
      * registered {@link AuthAdapter} instances. If any adapter in the chain cancels the
      * authentication, the process stops.
      *
-     * @param request The {@link Request} object representing the incoming HTTP request.
      * @return The {@link AuthResult} object that contains the result of the authentication process.
      */
     @Override
-    public AuthResult authenticate(final Request request) {
         final AuthResult result = new AuthResult();
 
         Pattern pattern = Pattern.compile(String.join("|", excluded));
