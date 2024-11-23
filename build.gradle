@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'de.craftsblock.craftsnet'
+group = 'de.craftsblock.craftsnet.modules'
 version = '1.0.0-SNAPSHOT'
 
 repositories {
