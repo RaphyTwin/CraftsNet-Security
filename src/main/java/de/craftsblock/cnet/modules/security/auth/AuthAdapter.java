@@ -1,4 +1,4 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth;
+package de.craftsblock.cnet.modules.security.auth;
 
 import de.craftsblock.craftsnet.api.http.Request;
 

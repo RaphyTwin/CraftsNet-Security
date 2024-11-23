@@ -1,9 +1,9 @@
-package de.craftsblock.craftsnet.module.accesscontroller;
+package de.craftsblock.cnet.modules.security;
 
+import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
+import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftscore.event.Event;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
-import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
+import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,9 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 1.0.0-SNAPSHOT
  */
-public class AccessController {
+public class CNetSecurity {
 
-    private static AddonEntrypoint controllerAddon;
+    private static AddonEntrypoint securityAddon;
 
     private static final ConcurrentHashMap<Class<? extends Manager>, Manager> managers = new ConcurrentHashMap<>();
 
@@ -29,7 +29,7 @@ public class AccessController {
      * @param controllerAddon The instance of {@link AddonEntrypoint} to be set.
      */
     protected static void setControllerAddon(AddonEntrypoint controllerAddon) {
-        AccessController.controllerAddon = controllerAddon;
+        CNetSecurity.securityAddon = controllerAddon;
     }
 
     /**
@@ -37,8 +37,8 @@ public class AccessController {
      *
      * @return The current {@link AddonEntrypoint}, or null if none has been set.
      */
-    public static AddonEntrypoint getControllerAddon() {
-        return controllerAddon;
+    public static AddonEntrypoint getSecurityAddon() {
+        return securityAddon;
     }
 
     /**
@@ -97,9 +97,9 @@ public class AccessController {
      * @throws IllegalAccessException    If a listener method cannot be accessed.
      */
     public static void callEvent(Event event) throws InvocationTargetException, IllegalAccessException {
-        if (getControllerAddon() == null)
+        if (getSecurityAddon() == null)
             throw new IllegalStateException("The addon instance has not been set! Is the AccessController addon active?");
-        getControllerAddon().craftsNet().listenerRegistry().call(event);
+        getSecurityAddon().craftsNet().listenerRegistry().call(event);
     }
 
 }

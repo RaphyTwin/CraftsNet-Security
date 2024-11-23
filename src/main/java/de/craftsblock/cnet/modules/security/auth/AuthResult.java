@@ -1,4 +1,4 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth;
+package de.craftsblock.cnet.modules.security.auth;
 
 /**
  * The {@link AuthResult} class represents the outcome of an authentication process.

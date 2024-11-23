@@ -1,14 +1,17 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
+package de.craftsblock.cnet.modules.security.auth.token;
 
 import com.google.gson.JsonElement;
+import de.craftsblock.cnet.modules.security.CNetSecurity;
+import de.craftsblock.cnet.modules.security.events.auth.token.TokenCreateEvent;
+import de.craftsblock.cnet.modules.security.events.auth.token.TokenRevokeEvent;
+import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftscore.json.JsonParser;
-import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.utils.Manager;
 import de.craftsblock.craftsnet.utils.Utils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +38,7 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
      * If the file contains a valid json array, tokens are deserialized and loaded into the manager.
      */
     public TokenManager() {
-        saveFile = new File(AccessController.getControllerAddon().getDataFolder(), "tokens.json");
+        saveFile = new File(CNetSecurity.getSecurityAddon().getDataFolder(), "tokens.json");
         Json json = JsonParser.parse(saveFile);
         if (!json.getObject().isJsonArray()) return;
 
@@ -51,6 +54,13 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
      * @param token The {@link Token} to be registered.
      */
     public void registerToken(Token token) {
+        try {
+            TokenCreateEvent event = new TokenCreateEvent(token);
+            CNetSecurity.callEvent(event);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         this.put(token.id(), token);
     }
 
@@ -60,6 +70,13 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
      * @param token The {@link Token} to be unregistered.
      */
     public void unregisterToken(Token token) {
+        try {
+            TokenRevokeEvent event = new TokenRevokeEvent(token);
+            CNetSecurity.callEvent(event);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         this.remove(token.id());
     }
 

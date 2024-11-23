@@ -1,14 +1,14 @@
-package de.craftsblock.craftsnet.module.accesscontroller.listeners;
+package de.craftsblock.cnet.modules.security.listeners;
 
+import de.craftsblock.cnet.modules.security.auth.AuthResult;
+import de.craftsblock.cnet.modules.security.auth.chains.AuthChain;
 import de.craftsblock.craftscore.event.EventHandler;
 import de.craftsblock.craftscore.event.EventPriority;
 import de.craftsblock.craftscore.event.ListenerAdapter;
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.events.requests.PreRequestEvent;
-import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.AuthChain;
+import de.craftsblock.cnet.modules.security.CNetSecurity;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class PreRequestListener implements ListenerAdapter {
         Exchange exchange = event.getExchange();
 
         // Iterate through each authentication chain
-        for (AuthChain chain : AccessController.getAuthChainManager()) {
+        for (AuthChain chain : CNetSecurity.getAuthChainManager()) {
             // Authenticate the incoming request using the current chain
             AuthResult result = chain.authenticate(exchange);
 

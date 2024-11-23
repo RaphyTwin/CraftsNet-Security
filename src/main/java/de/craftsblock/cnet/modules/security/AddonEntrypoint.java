@@ -1,12 +1,12 @@
-package de.craftsblock.craftsnet.module.accesscontroller;
+package de.craftsblock.cnet.modules.security;
 
+import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
+import de.craftsblock.cnet.modules.security.auth.chains.SimpleAuthChain;
+import de.craftsblock.cnet.modules.security.listeners.PreRequestListener;
 import de.craftsblock.craftsnet.addon.Addon;
-import de.craftsblock.craftsnet.module.accesscontroller.listeners.PreRequestListener;
-import de.craftsblock.craftsnet.module.accesscontroller.listeners.SocketListener;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthChainManager;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.chains.SimpleAuthChain;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenAuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.token.TokenManager;
+import de.craftsblock.cnet.modules.security.listeners.SocketListener;
+import de.craftsblock.cnet.modules.security.auth.token.TokenAuthAdapter;
+import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
 
 /**
  * The AccessControllerAddon class extends the base {@link Addon} class to provide specific functionality
@@ -25,15 +25,15 @@ public class AddonEntrypoint extends Addon {
     @Override
     public void onLoad() {
         // Set the instance
-        AccessController.setControllerAddon(this);
+        CNetSecurity.setControllerAddon(this);
 
         // Register listeners
         listenerRegistry().register(new PreRequestListener());
         listenerRegistry().register(new SocketListener());
 
         // Set environment variables
-        AccessController.registerManager(new AuthChainManager());
-        AccessController.registerManager(new TokenManager());
+        CNetSecurity.registerManager(new AuthChainManager());
+        CNetSecurity.registerManager(new TokenManager());
     }
 
     /**
@@ -44,7 +44,7 @@ public class AddonEntrypoint extends Addon {
         // Create a new default auth chain
         SimpleAuthChain authChain = new SimpleAuthChain();
         authChain.append(new TokenAuthAdapter());
-        AccessController.getAuthChainManager().add(authChain);
+        CNetSecurity.getAuthChainManager().add(authChain);
 
     }
 
@@ -53,10 +53,10 @@ public class AddonEntrypoint extends Addon {
      */
     @Override
     public void onDisable() {
-        AccessController.getTokenManager().save();
+        CNetSecurity.getTokenManager().save();
 
         // Unset the instance
-        AccessController.setControllerAddon(null);
+        CNetSecurity.setControllerAddon(null);
     }
 
 }

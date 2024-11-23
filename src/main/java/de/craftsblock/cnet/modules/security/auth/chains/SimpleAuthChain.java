@@ -1,9 +1,9 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.chains;
+package de.craftsblock.cnet.modules.security.auth.chains;
 
+import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
+import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
 
 import java.util.ArrayList;
 import java.util.List;

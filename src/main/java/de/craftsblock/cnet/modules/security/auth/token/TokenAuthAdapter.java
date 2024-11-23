@@ -1,9 +1,9 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
+package de.craftsblock.cnet.modules.security.auth.token;
 
+import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
+import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.module.accesscontroller.AccessController;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthAdapter;
-import de.craftsblock.craftsnet.module.accesscontroller.auth.AuthResult;
+import de.craftsblock.cnet.modules.security.CNetSecurity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
@@ -36,7 +36,7 @@ public class TokenAuthAdapter implements AuthAdapter {
      * <p>
      * This method checks for the presence of the Authorization header and validates
      * the token format. If the token is valid, it retrieves the corresponding
-     * {@link Token} from the {@link AccessController} and verifies the token's
+     * {@link Token} from the {@link CNetSecurity} and verifies the token's
      * secret using BCrypt. If any validation fails, the authentication result is
      * marked as failed.
      *
@@ -79,7 +79,7 @@ public class TokenAuthAdapter implements AuthAdapter {
             long id = Long.parseLong(part.substring(0, 16), 16);
 
             // Retrieve the token from the token manager
-            Token token = AccessController.getTokenManager().get(id);
+            Token token = CNetSecurity.getTokenManager().get(id);
             if (token == null) throw new IllegalStateException();
 
             // Extract the secret from the token and verify it

@@ -1,4 +1,4 @@
-package de.craftsblock.craftsnet.module.accesscontroller.utils;
+package de.craftsblock.cnet.modules.security.utils;
 
 /**
  * The {@link Manager} interface serves as a marker for classes that manage specific functionalities

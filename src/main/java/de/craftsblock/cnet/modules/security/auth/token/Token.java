@@ -1,8 +1,8 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
+package de.craftsblock.cnet.modules.security.auth.token;
 
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftscore.utils.id.Snowflake;
-import de.craftsblock.craftsnet.module.accesscontroller.utils.Entity;
+import de.craftsblock.cnet.modules.security.utils.Entity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;

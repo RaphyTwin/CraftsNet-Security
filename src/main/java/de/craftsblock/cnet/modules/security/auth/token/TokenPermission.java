@@ -1,8 +1,8 @@
-package de.craftsblock.craftsnet.module.accesscontroller.auth.token;
+package de.craftsblock.cnet.modules.security.auth.token;
 
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftsnet.api.http.HttpMethod;
-import de.craftsblock.craftsnet.module.accesscontroller.utils.Entity;
+import de.craftsblock.cnet.modules.security.utils.Entity;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;

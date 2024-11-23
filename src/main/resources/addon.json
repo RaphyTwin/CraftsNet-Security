@@ -1,6 +1,6 @@
 {
-  "name": "AccessController",
-  "main": "de.craftsblock.craftsnet.module.accesscontroller.AddonEntrypoint",
+  "name": "Security",
+  "main": "de.craftsblock.cnet.modules.security.AddonEntrypoint",
   "authors": [
     "Philipp Maywald",
     "CraftsBlock"
