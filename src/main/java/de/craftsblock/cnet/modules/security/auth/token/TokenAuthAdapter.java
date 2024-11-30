@@ -2,6 +2,7 @@ package de.craftsblock.cnet.modules.security.auth.token;
 
 import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
+import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.craftsnet.api.http.Request;
 import de.craftsblock.cnet.modules.security.CNetSecurity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -85,6 +86,17 @@ public class TokenAuthAdapter implements AuthAdapter {
             // Extract the secret from the token and verify it
             String secret = part.substring(16);
             if (!BCrypt.checkpw(secret, token.hash())) throw new IllegalStateException();
+
+            // Check the token permissions
+            String url = request.getUrl();
+            String domain = request.getDomain();
+            HttpMethod method = request.getHttpMethod();
+            for (TokenPermission permission : token.permissions())
+                if (permission.isHttpMethodAllowed(method)
+                        && permission.isDomainAllowed(domain)
+                        && permission.isPathAllowed(url))
+                    return;
+            failAuth(result, "You do not have access to this ressource!");
         } catch (NumberFormatException | IllegalStateException e) {
             failAuth(result, "No valid auth token present!");
         }

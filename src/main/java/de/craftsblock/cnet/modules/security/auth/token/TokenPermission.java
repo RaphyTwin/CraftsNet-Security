@@ -5,6 +5,7 @@ import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.cnet.modules.security.utils.Entity;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +22,18 @@ import java.util.regex.Pattern;
  * @since 1.0.0-SNAPSHOT
  */
 public record TokenPermission(Pattern path, Pattern domain, HttpMethod... methods) implements Entity {
+
+    /**
+     * Creates a new instance of {@link TokenPermission}.
+     *
+     * @param path    a regular expression representing the allowed path.
+     * @param domain  a regular expression representing the allowed domain.
+     * @param methods a variable number of {@link HttpMethod} values representing
+     *                the allowed HTTP methods (e.g., GET, POST).
+     */
+    public TokenPermission(String path, String domain, HttpMethod... methods) {
+        this(Pattern.compile(path), Pattern.compile(domain), methods);
+    }
 
     /**
      * Checks if a given pattern is a wildcard pattern.
@@ -82,6 +95,17 @@ public record TokenPermission(Pattern path, Pattern domain, HttpMethod... method
      */
     boolean isDomainAllowed(String domain) {
         return isDomainWildcard() || isAllowed(domain, domain());
+    }
+
+    /**
+     * Determines if a given http method is allowed based on the defined allowed methods.
+     *
+     * @param method the http method to check.
+     * @return {@code true} if the http method is allowed, {@code false} otherwise.
+     */
+    public boolean isHttpMethodAllowed(HttpMethod method) {
+        List<HttpMethod> methods = Arrays.asList(methods());
+        return methods.contains(HttpMethod.ALL) || methods.contains(HttpMethod.ALL_RAW) || methods.contains(method);
     }
 
     /**
