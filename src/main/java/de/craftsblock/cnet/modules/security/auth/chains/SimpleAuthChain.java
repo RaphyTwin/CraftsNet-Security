@@ -4,6 +4,7 @@ import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
+import de.craftsblock.craftsnet.api.utils.SessionStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class SimpleAuthChain extends AuthChain {
     @Override
     public AuthResult authenticate(final Exchange exchange) {
         final Request request = exchange.request();
+        final SessionStorage storage = exchange.storage();
         final AuthResult result = new AuthResult();
 
         Pattern pattern = Pattern.compile(String.join("|", excluded));
@@ -48,7 +50,7 @@ public class SimpleAuthChain extends AuthChain {
 
         // Iterate over each adapter in the chain and authenticate the request.
         for (AuthAdapter adapter : adapters) {
-            adapter.authenticate(result, request);
+            adapter.authenticate(result, request, storage);
 
             // Stop processing further adapters if the authentication is cancelled.
             if (result.isCancelled()) break;

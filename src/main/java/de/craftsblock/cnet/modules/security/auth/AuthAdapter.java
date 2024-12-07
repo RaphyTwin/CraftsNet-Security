@@ -1,6 +1,7 @@
 package de.craftsblock.cnet.modules.security.auth;
 
 import de.craftsblock.craftsnet.api.http.Request;
+import de.craftsblock.craftsnet.api.utils.SessionStorage;
 
 /**
  * The {@link AuthAdapter} interface defines the contract for implementing custom authentication mechanisms.
@@ -23,8 +24,9 @@ public interface AuthAdapter {
      *
      * @param result  The {@link AuthResult} object where the outcome of the authentication process is stored.
      * @param request The {@link Request} object representing the incoming HTTP request.
+     * @param storage The {@link SessionStorage} object containing information stored on the request.
      */
-    void authenticate(AuthResult result, Request request);
+    void authenticate(AuthResult result, Request request, SessionStorage storage);
 
     /**
      * Marks the authentication process as failed. This method is used to set the failure state

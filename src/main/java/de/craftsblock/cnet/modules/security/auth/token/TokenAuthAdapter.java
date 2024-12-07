@@ -5,6 +5,7 @@ import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.craftsnet.api.http.Request;
 import de.craftsblock.cnet.modules.security.CNetSecurity;
+import de.craftsblock.craftsnet.api.utils.SessionStorage;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
@@ -43,9 +44,10 @@ public class TokenAuthAdapter implements AuthAdapter {
      *
      * @param result  The {@link AuthResult} object where the authentication result will be stored.
      * @param request The {@link Request} object containing the HTTP request data.
+     * @param storage The {@link SessionStorage} object containing information stored on the request.
      */
     @Override
-    public void authenticate(AuthResult result, Request request) {
+    public void authenticate(AuthResult result, Request request, SessionStorage storage) {
         // Retrieve the authorization header from the request
         String auth_header = request.getHeader(AUTH_HEADER);
 
@@ -94,8 +96,11 @@ public class TokenAuthAdapter implements AuthAdapter {
             for (TokenPermission permission : token.permissions())
                 if (permission.isHttpMethodAllowed(method)
                         && permission.isDomainAllowed(domain)
-                        && permission.isPathAllowed(url))
+                        && permission.isPathAllowed(url)) {
+                    storage.put("auth.token", token);
                     return;
+                }
+
             failAuth(result, "You do not have access to this ressource!");
         } catch (NumberFormatException | IllegalStateException e) {
             failAuth(result, "No valid auth token present!");
