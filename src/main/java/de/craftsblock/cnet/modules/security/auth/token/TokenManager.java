@@ -38,7 +38,7 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
      * If the file contains a valid json array, tokens are deserialized and loaded into the manager.
      */
     public TokenManager() {
-        saveFile = new File(CNetSecurity.getSecurityAddon().getDataFolder(), "tokens.json");
+        saveFile = new File(CNetSecurity.getAddonEntrypoint().getDataFolder(), "tokens.json");
         Json json = JsonParser.parse(saveFile);
         if (!json.getObject().isJsonArray()) return;
 

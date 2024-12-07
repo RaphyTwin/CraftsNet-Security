@@ -1,6 +1,7 @@
 package de.craftsblock.cnet.modules.security;
 
 import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
+import de.craftsblock.cnet.modules.security.auth.chains.SimpleAuthChain;
 import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
 import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftscore.event.Event;
@@ -19,18 +20,49 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CNetSecurity {
 
-    private static AddonEntrypoint securityAddon;
-
-    private static final ConcurrentHashMap<Class<? extends Manager>, Manager> managers = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, Object> instances = new ConcurrentHashMap<>();
 
     /**
-     * Sets the AccessControllerAddon for this AccessController.
-     * This method is intended to be used internally by the system.
+     * Registers a new object instance in the internal map. The instance is stored using its class type as the key.
+     * This method is intended to be used internally to register object instances during initialization.
      *
-     * @param controllerAddon The instance of {@link AddonEntrypoint} to be set.
+     * @param instance The object instance to be registered.
      */
-    protected static void setControllerAddon(AddonEntrypoint controllerAddon) {
-        CNetSecurity.securityAddon = controllerAddon;
+    protected static void register(Object instance) {
+        instances.put(instance.getClass(), instance);
+    }
+
+    /**
+     * Unregisters an object instance from the internal map.
+     *
+     * @param instance The object instance to be unregistered.
+     */
+    protected static void unregister(Object instance) {
+        unregister(instance.getClass());
+    }
+
+    /**
+     * Unregisters an object type from the internal map.
+     *
+     * @param instance The object type to be unregistered.
+     */
+    protected static void unregister(Class<?> instance) {
+        instances.remove(instance);
+    }
+
+    /**
+     * Retrieves a registered manager instance by its class type.
+     * If the requested manager has not been registered, an {@link IllegalStateException} is thrown.
+     *
+     * @param <T>  The type of the instance.
+     * @param type class type of the instance to be retrieved.
+     * @return The manager instance, if found.
+     * @throws IllegalStateException If the manager instance is not registered.
+     */
+    protected static <T> T get(Class<T> type) {
+        if (!instances.containsKey(AuthChainManager.class))
+            throw new IllegalStateException("There is no instance of " + type.getSimpleName() + " registered!");
+        return type.cast(instances.get(type));
     }
 
     /**
@@ -38,34 +70,8 @@ public class CNetSecurity {
      *
      * @return The current {@link AddonEntrypoint}, or null if none has been set.
      */
-    public static AddonEntrypoint getSecurityAddon() {
-        return securityAddon;
-    }
-
-    /**
-     * Registers a new manager instance in the internal map. The manager is stored using its class type as the key.
-     * This method is intended to be used internally to register managers during initialization.
-     *
-     * @param <T>     The type of the manager, extending {@link Manager}.
-     * @param manager The manager instance to be registered.
-     */
-    protected static <T extends Manager> void registerManager(T manager) {
-        managers.put(manager.getClass(), manager);
-    }
-
-    /**
-     * Retrieves a registered manager instance by its class type.
-     * If the requested manager has not been registered, an {@link IllegalStateException} is thrown.
-     *
-     * @param <T>     The type of the manager, extending {@link Manager}.
-     * @param manager The class type of the manager to be retrieved.
-     * @return The manager instance, if found.
-     * @throws IllegalStateException If the manager instance is not registered.
-     */
-    protected static <T extends Manager> T getManager(Class<T> manager) {
-        if (!managers.containsKey(AuthChainManager.class))
-            throw new IllegalStateException("There is no instance of " + manager.getSimpleName() + " registered!");
-        return manager.cast(managers.get(manager));
+    public static AddonEntrypoint getAddonEntrypoint() {
+        return get(AddonEntrypoint.class);
     }
 
     /**
@@ -75,7 +81,7 @@ public class CNetSecurity {
      * @throws IllegalStateException If no instance of {@link TokenManager} is registered.
      */
     public static TokenManager getTokenManager() {
-        return getManager(TokenManager.class);
+        return get(TokenManager.class);
     }
 
     /**
@@ -85,7 +91,7 @@ public class CNetSecurity {
      * @throws IllegalStateException If no instance of {@link AuthChainManager} is registered.
      */
     public static AuthChainManager getAuthChainManager() {
-        return getManager(AuthChainManager.class);
+        return get(AuthChainManager.class);
     }
 
     /**
@@ -95,7 +101,7 @@ public class CNetSecurity {
      * @throws IllegalStateException If no instance of {@link RateLimitManager} is registered.
      */
     public static RateLimitManager getRateLimitManager() {
-        return getManager(RateLimitManager.class);
+        return get(RateLimitManager.class);
     }
 
     /**
@@ -108,9 +114,9 @@ public class CNetSecurity {
      * @throws IllegalAccessException    If a listener method cannot be accessed.
      */
     public static void callEvent(Event event) throws InvocationTargetException, IllegalAccessException {
-        if (getSecurityAddon() == null)
+        if (getAddonEntrypoint() == null)
             throw new IllegalStateException("The addon instance has not been set! Is the CNetSecurity addon active?");
-        getSecurityAddon().craftsNet().listenerRegistry().call(event);
+        getAddonEntrypoint().craftsNet().listenerRegistry().call(event);
     }
 
 }

@@ -30,16 +30,16 @@ public class AddonEntrypoint extends Addon {
     @Override
     public void onLoad() {
         // Set the instance
-        CNetSecurity.setControllerAddon(this);
+        CNetSecurity.register(this);
 
         // Register listeners
         listenerRegistry().register(new PreRequestListener());
         listenerRegistry().register(new SocketListener());
 
         // Set environment variables
-        CNetSecurity.registerManager(new AuthChainManager());
-        CNetSecurity.registerManager(new TokenManager());
-        CNetSecurity.registerManager(new RateLimitManager());
+        CNetSecurity.register(new AuthChainManager());
+        CNetSecurity.register(new TokenManager());
+        CNetSecurity.register(new RateLimitManager());
     }
 
     /**
@@ -48,9 +48,11 @@ public class AddonEntrypoint extends Addon {
     @Override
     public void onEnable() {
         // Create a new default auth chain
-        SimpleAuthChain authChain = new SimpleAuthChain();
-        authChain.append(new TokenAuthAdapter());
-        CNetSecurity.getAuthChainManager().add(authChain);
+        AuthChainManager chains = CNetSecurity.getAuthChainManager();
+        if (chains != null) {
+            CNetSecurity.register(new SimpleAuthChain());
+            CNetSecurity.getDefaultAuthChain().append(new TokenAuthAdapter());
+        }
 
         // Insert built in rate limit adapters
         RateLimitManager rater = CNetSecurity.getRateLimitManager();
@@ -68,7 +70,7 @@ public class AddonEntrypoint extends Addon {
         CNetSecurity.getTokenManager().save();
 
         // Unset the instance
-        CNetSecurity.setControllerAddon(null);
+        CNetSecurity.unregister(this);
     }
 
 }
