@@ -1,6 +1,7 @@
 package de.craftsblock.cnet.modules.security;
 
 import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
+import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
 import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftscore.event.Event;
 import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
@@ -88,6 +89,16 @@ public class CNetSecurity {
     }
 
     /**
+     * Retrieves the {@link RateLimitManager} instance that manages rate limits.
+     *
+     * @return The {@link RateLimitManager} instance.
+     * @throws IllegalStateException If no instance of {@link RateLimitManager} is registered.
+     */
+    public static RateLimitManager getRateLimitManager() {
+        return getManager(RateLimitManager.class);
+    }
+
+    /**
      * Dispatches the given event to the registered listeners via the listener registry.
      * This method ensures that the AccessController addon is active before proceeding.
      *
@@ -98,7 +109,7 @@ public class CNetSecurity {
      */
     public static void callEvent(Event event) throws InvocationTargetException, IllegalAccessException {
         if (getSecurityAddon() == null)
-            throw new IllegalStateException("The addon instance has not been set! Is the AccessController addon active?");
+            throw new IllegalStateException("The addon instance has not been set! Is the CNetSecurity addon active?");
         getSecurityAddon().craftsNet().listenerRegistry().call(event);
     }
 

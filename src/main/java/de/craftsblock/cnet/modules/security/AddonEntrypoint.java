@@ -2,11 +2,14 @@ package de.craftsblock.cnet.modules.security;
 
 import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
 import de.craftsblock.cnet.modules.security.auth.chains.SimpleAuthChain;
-import de.craftsblock.cnet.modules.security.listeners.PreRequestListener;
-import de.craftsblock.craftsnet.addon.Addon;
-import de.craftsblock.cnet.modules.security.listeners.SocketListener;
 import de.craftsblock.cnet.modules.security.auth.token.TokenAuthAdapter;
 import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
+import de.craftsblock.cnet.modules.security.listeners.PreRequestListener;
+import de.craftsblock.cnet.modules.security.listeners.SocketListener;
+import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
+import de.craftsblock.cnet.modules.security.ratelimit.builtin.IPRateLimitAdapter;
+import de.craftsblock.cnet.modules.security.ratelimit.builtin.TokenRateLimitAdapter;
+import de.craftsblock.craftsnet.addon.Addon;
 
 /**
  * The AccessControllerAddon class extends the base {@link Addon} class to provide specific functionality
@@ -34,6 +37,7 @@ public class AddonEntrypoint extends Addon {
         // Set environment variables
         CNetSecurity.registerManager(new AuthChainManager());
         CNetSecurity.registerManager(new TokenManager());
+        CNetSecurity.registerManager(new RateLimitManager());
     }
 
     /**
@@ -46,6 +50,12 @@ public class AddonEntrypoint extends Addon {
         authChain.append(new TokenAuthAdapter());
         CNetSecurity.getAuthChainManager().add(authChain);
 
+        // Insert built in rate limit adapters
+        RateLimitManager rater = CNetSecurity.getRateLimitManager();
+        if (rater != null) {
+            rater.register(new IPRateLimitAdapter(this));
+            rater.register(new TokenRateLimitAdapter(this));
+        }
     }
 
     /**
