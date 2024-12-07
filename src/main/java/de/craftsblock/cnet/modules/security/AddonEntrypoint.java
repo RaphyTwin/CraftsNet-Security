@@ -10,6 +10,7 @@ import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
 import de.craftsblock.cnet.modules.security.ratelimit.builtin.IPRateLimitAdapter;
 import de.craftsblock.cnet.modules.security.ratelimit.builtin.TokenRateLimitAdapter;
 import de.craftsblock.craftsnet.addon.Addon;
+import de.craftsblock.craftsnet.addon.meta.annotations.Meta;
 
 /**
  * The AccessControllerAddon class extends the base {@link Addon} class to provide specific functionality
@@ -20,6 +21,7 @@ import de.craftsblock.craftsnet.addon.Addon;
  * @version 1.0.0
  * @since 1.0.0-SNAPSHOT
  */
+@Meta(name = "CNetSecurity")
 public class AddonEntrypoint extends Addon {
 
     /**
