@@ -64,52 +64,61 @@ public class SimpleAuthChain extends AuthChain {
      * it will not be added again.
      *
      * @param adapter The {@link AuthAdapter} to be appended to the chain.
+     * @return The instance of {@link SimpleAuthChain} used for chain method calls.
      */
     @Override
-    public void append(AuthAdapter adapter) {
-        if (!adapters.isEmpty() && adapters.contains(adapter)) return;
+    public SimpleAuthChain append(AuthAdapter adapter) {
+        if (!adapters.isEmpty() && adapters.contains(adapter)) return this;
         adapters.add(adapter);
+        return this;
     }
 
     /**
      * Removes a specific {@link AuthAdapter} from the chain.
      *
      * @param adapter The {@link AuthAdapter} to be removed from the chain.
+     * @return The instance of {@link SimpleAuthChain} used for chain method calls.
      */
     @Override
-    public void remove(AuthAdapter adapter) {
+    public SimpleAuthChain remove(AuthAdapter adapter) {
         adapters.remove(adapter);
+        return this;
     }
 
     /**
      * Removes all instances of the specified {@link AuthAdapter} class from the chain.
      *
      * @param adapter The class type of the {@link AuthAdapter} to be removed.
+     * @return The instance of {@link SimpleAuthChain} used for chain method calls.
      */
     @Override
-    public void removeAll(Class<? extends AuthAdapter> adapter) {
+    public SimpleAuthChain removeAll(Class<? extends AuthAdapter> adapter) {
         adapters.stream()
                 .filter(adapter::isInstance)
                 .forEach(this::remove);
+        return this;
     }
 
     /**
      * Adds a new url pattern to the exclusion list, preventing matching requests from undergoing authentication.
      *
      * @param pattern The exclusion pattern to add, typically a regex string matching URLs to exclude.
+     * @return The instance of {@link SimpleAuthChain} used for chain method calls.
      */
-    public void addExclusion(String pattern) {
+    public SimpleAuthChain addExclusion(String pattern) {
         excluded.add(pattern);
+        return this;
     }
 
     /**
      * Removes an url pattern from the exclusion list, allowing matching requests to undergo authentication again.
      *
      * @param pattern The exclusion pattern to remove.
+     * @return The instance of {@link SimpleAuthChain} used for chain method calls.
      */
-    public void removeExclusion(String pattern) {
+    public SimpleAuthChain removeExclusion(String pattern) {
         excluded.remove(pattern);
+        return this;
     }
-
 
 }

@@ -34,22 +34,25 @@ public abstract class AuthChain {
      * during future authentication attempts.
      *
      * @param adapter The {@link AuthAdapter} to be added to the authentication chain.
+     * @return The instance of {@link AuthChain} used for chain method calls.
      */
-    public abstract void append(AuthAdapter adapter);
+    public abstract AuthChain append(AuthAdapter adapter);
 
     /**
      * Removes a specific {@link AuthAdapter} from the authentication chain.
      *
      * @param adapter The {@link AuthAdapter} to be removed from the authentication chain.
+     * @return The instance of {@link AuthChain} used for chain method calls.
      */
-    public abstract void remove(AuthAdapter adapter);
+    public abstract AuthChain remove(AuthAdapter adapter);
 
     /**
      * Removes all {@link AuthAdapter} instances of the specified type from the authentication chain.
      * This can be used to clear all adapters of a certain type (e.g., all token-based authenticators).
      *
      * @param adapter The class type of {@link AuthAdapter} to be removed.
+     * @return The instance of {@link AuthChain} used for chain method calls.
      */
-    public abstract void removeAll(Class<? extends AuthAdapter> adapter);
+    public abstract AuthChain removeAll(Class<? extends AuthAdapter> adapter);
 
 }
