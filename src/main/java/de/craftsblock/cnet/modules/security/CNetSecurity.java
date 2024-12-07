@@ -75,6 +75,16 @@ public class CNetSecurity {
     }
 
     /**
+     * Retrieves the default {@link SimpleAuthChain} instance.
+     *
+     * @return The {@link SimpleAuthChain} instance.
+     * @throws IllegalStateException If no default instance of {@link SimpleAuthChain} is registered.
+     */
+    public static SimpleAuthChain getDefaultAuthChain() {
+        return get(SimpleAuthChain.class);
+    }
+
+    /**
      * Retrieves the {@link TokenManager} instance that manages authentication tokens.
      *
      * @return The {@link TokenManager} instance.
