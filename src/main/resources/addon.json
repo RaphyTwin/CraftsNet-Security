@@ -1,5 +1,5 @@
 {
-  "name": "Security",
+  "name": "CNetSecurity",
   "main": "de.craftsblock.cnet.modules.security.AddonEntrypoint",
   "authors": [
     "Philipp Maywald",
