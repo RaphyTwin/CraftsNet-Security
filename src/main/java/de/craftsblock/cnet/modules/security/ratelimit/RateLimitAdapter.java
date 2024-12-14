@@ -1,6 +1,8 @@
 package de.craftsblock.cnet.modules.security.ratelimit;
 
+import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
+import de.craftsblock.craftsnet.api.http.Response;
 import de.craftsblock.craftsnet.api.utils.SessionStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -105,6 +107,28 @@ public abstract class RateLimitAdapter {
      */
     public RateLimitInfo createInfo() {
         return RateLimitInfo.of(this);
+    }
+
+    /**
+     * Appends rate limit information as HTTP headers to the response of the given {@link Exchange}.
+     * <p>
+     * This method adds the following headers to the response:
+     * <ul>
+     *     <li><code>X-RateLimit-Limit</code>: Indicates the maximum number of requests allowed within the rate limit.</li>
+     *     <li><code>X-RateLimit-Remaining</code>: Indicates the remaining number of requests that can be made before the rate limit is exceeded.</li>
+     *     <li><code>X-RateLimit-Reset</code>: Indicates the time in milliseconds until the rate limit resets.</li>
+     * </ul>
+     * </p>
+     *
+     * @param exchange The {@link Exchange} representing the current HTTP request and response.
+     * @param info     The {@link RateLimitInfo} containing the rate limit details for the current request.
+     */
+    public void appendToResponse(final Exchange exchange, final RateLimitInfo info) {
+        final Response response = exchange.response();
+
+        response.addHeader("X-RateLimit-Limit", getId() + "=" + getMax());
+        response.addHeader("X-RateLimit-Remaining", getId() + "=" + Math.max(0, getMax() - info.times().get()));
+        response.addHeader("X-RateLimit-Reset", getId() + "=" + Math.max(0, info.expiresAt().get() - System.currentTimeMillis()));
     }
 
     /**

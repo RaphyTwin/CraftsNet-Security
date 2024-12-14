@@ -89,11 +89,8 @@ public class RateLimitManager implements Manager {
             boolean blocked = info.access();
             if (!limited.get()) limited.set(blocked);
 
-            if (adapter.shouldBeInResponse()) {
-                response.addHeader("X-RateLimit-Limit", adapter.getId() + "=" + adapter.getMax());
-                response.addHeader("X-RateLimit-Remaining", adapter.getId() + "=" + Math.max(0, adapter.getMax() - info.times().get()));
-                response.addHeader("X-RateLimit-Reset", adapter.getId() + "=" + Math.max(0, info.expiresAt().get() - System.currentTimeMillis()));
-            }
+            if (adapter.shouldBeInResponse())
+                adapter.appendToResponse(exchange, info);
         }
 
         return limited.get();
