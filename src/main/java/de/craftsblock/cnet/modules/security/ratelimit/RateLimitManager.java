@@ -1,15 +1,18 @@
 package de.craftsblock.cnet.modules.security.ratelimit;
 
+import de.craftsblock.cnet.modules.security.CNetSecurity;
+import de.craftsblock.cnet.modules.security.events.ratelimit.RateLimitExceededEvent;
 import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.api.http.Response;
 import de.craftsblock.craftsnet.api.utils.SessionStorage;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 /**
@@ -77,23 +80,29 @@ public class RateLimitManager implements Manager {
         if (this.adapters.isEmpty()) return false;
 
         final Request request = exchange.request();
-        final Response response = exchange.response();
         final SessionStorage storage = exchange.storage();
 
-        AtomicBoolean limited = new AtomicBoolean(false);
+        List<RateLimitAdapter> exceeded = new ArrayList<>();
         for (RateLimitAdapter adapter : adapters.values()) {
             RateLimitIndex index = adapter.adapt(request, storage);
             if (index == null) continue;
 
             RateLimitInfo info = indices.computeIfAbsent(index, r -> adapter.createInfo());
-            boolean blocked = info.access();
-            if (!limited.get()) limited.set(blocked);
+            if (info.access()) exceeded.add(adapter);
 
             if (adapter.shouldBeInResponse())
                 adapter.appendToResponse(exchange, info);
         }
 
-        return limited.get();
+        if (exceeded.isEmpty()) return false;
+
+        try {
+            CNetSecurity.callEvent(new RateLimitExceededEvent(exchange, exceeded));
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     /**

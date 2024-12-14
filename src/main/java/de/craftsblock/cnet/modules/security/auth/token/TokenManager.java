@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -56,6 +57,11 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
     public void registerToken(Token token) {
         try {
             TokenCreateEvent event = new TokenCreateEvent(token);
+            if (event.isCancelled()) {
+                CNetSecurity.getLogger().debug("Token creation of token " + token.id() + " cancelled!");
+                return;
+            }
+
             CNetSecurity.callEvent(event);
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -72,6 +78,11 @@ public final class TokenManager extends ConcurrentHashMap<Long, Token> implement
     public void unregisterToken(Token token) {
         try {
             TokenRevokeEvent event = new TokenRevokeEvent(token);
+            if (event.isCancelled()) {
+                CNetSecurity.getLogger().debug("Token revokation for token " + token.id() + " cancelled!");
+                return;
+            }
+
             CNetSecurity.callEvent(event);
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);

@@ -2,6 +2,9 @@ package de.craftsblock.cnet.modules.security.listeners;
 
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.cnet.modules.security.auth.chains.AuthChain;
+import de.craftsblock.cnet.modules.security.events.auth.AuthFailedEvent;
+import de.craftsblock.cnet.modules.security.events.auth.AuthSuccessEvent;
+import de.craftsblock.cnet.modules.security.events.auth.GenericAuthResultEvent;
 import de.craftsblock.craftscore.event.*;
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftsnet.api.annotations.AutoRegister;
@@ -13,6 +16,7 @@ import de.craftsblock.craftsnet.events.requests.routes.RouteRequestEvent;
 import de.craftsblock.craftsnet.events.requests.shares.ShareRequestEvent;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * The PreRequestListener class listens for pre-request events and processes
@@ -26,23 +30,30 @@ public class PreRequestListener implements ListenerAdapter {
      * event occurs and processes the authentication chains.
      *
      * @param event The {@link PreRequestEvent} containing information about the request.
-     * @throws IOException If an error occurs while processing the request or response.
+     * @throws IOException               If an error occurs while processing the request or response.
+     * @throws InvocationTargetException If an error occurs while calling / processing the event system
+     * @throws IllegalAccessException    If an error occurs while calling / processing the event system
      */
     @EventHandler(priority = EventPriority.LOWEST)
-    public void handleAuthChains(PreRequestEvent event) throws IOException {
+    public void handleAuthChains(PreRequestEvent event) throws IOException, InvocationTargetException, IllegalAccessException {
         Exchange exchange = event.getExchange();
 
         // Iterate through each authentication chain
         for (AuthChain chain : CNetSecurity.getAuthChainManager()) {
             // Authenticate the incoming request using the current chain
             AuthResult result = chain.authenticate(exchange);
+            GenericAuthResultEvent authEvent;
 
             // Check if the authentication was cancelled
             if (result.isCancelled()) {
                 event.setCancelled(true); // Cancel the event
+                authEvent = new AuthFailedEvent(exchange);
+
                 // Send an error response back to the client
                 exchange.response().print(Json.empty().set("error", result.getCancelReason()));
-            }
+            } else authEvent = new AuthSuccessEvent(exchange);
+
+            CNetSecurity.callEvent(authEvent);
         }
     }
 

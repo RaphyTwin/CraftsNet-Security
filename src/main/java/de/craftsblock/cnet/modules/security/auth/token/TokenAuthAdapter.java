@@ -3,6 +3,7 @@ package de.craftsblock.cnet.modules.security.auth.token;
 import de.craftsblock.cnet.modules.security.CNetSecurity;
 import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
+import de.craftsblock.cnet.modules.security.events.auth.token.TokenUsedEvent;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.craftsnet.api.http.Request;
@@ -101,12 +102,16 @@ public class TokenAuthAdapter implements AuthAdapter {
                         && permission.isDomainAllowed(domain)
                         && permission.isPathAllowed(url)) {
                     storage.put("auth.token", token);
+                    CNetSecurity.callEvent(new TokenUsedEvent(token));
                     return;
                 }
 
             failAuth(result, "You do not have access to this ressource!");
         } catch (NumberFormatException | IllegalStateException e) {
             failAuth(result, "No valid auth token present!");
+        } catch (Exception e) {
+            failAuth(result, "Failed to verify your token!");
+            CNetSecurity.getAddonEntrypoint().logger().error(e, "Failed to verify the api token!");
         }
     }
 
