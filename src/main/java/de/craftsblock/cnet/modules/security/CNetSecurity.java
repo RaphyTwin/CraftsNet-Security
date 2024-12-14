@@ -6,6 +6,8 @@ import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
 import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.craftscore.event.Event;
 import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
+import de.craftsblock.craftsnet.logging.Logger;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +30,7 @@ public class CNetSecurity {
      *
      * @param instance The object instance to be registered.
      */
+    @ApiStatus.Internal
     protected static void register(Object instance) {
         instances.put(instance.getClass(), instance);
     }
@@ -37,6 +40,7 @@ public class CNetSecurity {
      *
      * @param instance The object instance to be unregistered.
      */
+    @ApiStatus.Internal
     protected static void unregister(Object instance) {
         unregister(instance.getClass());
     }
@@ -46,6 +50,7 @@ public class CNetSecurity {
      *
      * @param instance The object type to be unregistered.
      */
+    @ApiStatus.Internal
     protected static void unregister(Class<?> instance) {
         instances.remove(instance);
     }
@@ -59,6 +64,7 @@ public class CNetSecurity {
      * @return The manager instance, if found.
      * @throws IllegalStateException If the manager instance is not registered.
      */
+    @ApiStatus.Internal
     protected static <T> T get(Class<T> type) {
         if (!instances.containsKey(AuthChainManager.class))
             throw new IllegalStateException("There is no instance of " + type.getSimpleName() + " registered!");
@@ -115,6 +121,17 @@ public class CNetSecurity {
     }
 
     /**
+     * Retrieves the {@link Logger} instance.
+     *
+     * @return The {@link Logger} instance.
+     * @throws IllegalStateException If no instance of {@link Logger} is registered.
+     */
+    @ApiStatus.Internal
+    public static Logger getLogger() {
+        return get(Logger.class);
+    }
+
+    /**
      * Dispatches the given event to the registered listeners via the listener registry.
      * This method ensures that the AccessController addon is active before proceeding.
      *
@@ -123,6 +140,7 @@ public class CNetSecurity {
      * @throws InvocationTargetException If an error occurs while invoking a listener method.
      * @throws IllegalAccessException    If a listener method cannot be accessed.
      */
+    @ApiStatus.Internal
     public static void callEvent(Event event) throws InvocationTargetException, IllegalAccessException {
         if (getAddonEntrypoint() == null)
             throw new IllegalStateException("The addon instance has not been set! Is the CNetSecurity addon active?");

@@ -31,6 +31,7 @@ public class AddonEntrypoint extends Addon {
     public void onLoad() {
         // Set the instance
         CNetSecurity.register(this);
+        CNetSecurity.register(this.logger());
 
         // Register listeners
         listenerRegistry().register(new PreRequestListener());
