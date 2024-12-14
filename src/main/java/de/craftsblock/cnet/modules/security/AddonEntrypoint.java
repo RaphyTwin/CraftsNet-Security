@@ -51,8 +51,12 @@ public class AddonEntrypoint extends Addon {
         // Create a new default auth chain
         AuthChainManager chains = CNetSecurity.getAuthChainManager();
         if (chains != null) {
-            CNetSecurity.register(new SimpleAuthChain());
-            CNetSecurity.getDefaultAuthChain().append(new TokenAuthAdapter());
+            SimpleAuthChain chain = new SimpleAuthChain();
+
+            chain.append(new TokenAuthAdapter());
+
+            chains.add(chain);
+            CNetSecurity.register(chain);
         }
 
         // Insert built in rate limit adapters
