@@ -1,5 +1,6 @@
 package de.craftsblock.cnet.modules.security.auth;
 
+import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
 import de.craftsblock.craftsnet.api.utils.SessionStorage;
 
@@ -22,11 +23,10 @@ public interface AuthAdapter {
      * Authenticates the incoming request. Implementations of this method should define the logic for
      * checking whether the request is authorized or not.
      *
-     * @param result  The {@link AuthResult} object where the outcome of the authentication process is stored.
-     * @param request The {@link Request} object representing the incoming HTTP request.
-     * @param storage The {@link SessionStorage} object containing information stored on the request.
+     * @param result   The {@link AuthResult} object where the outcome of the authentication process is stored.
+     * @param exchange The {@link Exchange} object representing the HTTP request.
      */
-    void authenticate(AuthResult result, Request request, SessionStorage storage);
+    void authenticate(AuthResult result, Exchange exchange);
 
     /**
      * Marks the authentication process as failed. This method is used to set the failure state

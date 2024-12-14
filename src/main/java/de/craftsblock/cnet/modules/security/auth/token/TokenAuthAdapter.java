@@ -1,10 +1,11 @@
 package de.craftsblock.cnet.modules.security.auth.token;
 
+import de.craftsblock.cnet.modules.security.CNetSecurity;
 import de.craftsblock.cnet.modules.security.auth.AuthAdapter;
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
+import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.HttpMethod;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.cnet.modules.security.CNetSecurity;
 import de.craftsblock.craftsnet.api.utils.SessionStorage;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -42,12 +43,14 @@ public class TokenAuthAdapter implements AuthAdapter {
      * secret using BCrypt. If any validation fails, the authentication result is
      * marked as failed.
      *
-     * @param result  The {@link AuthResult} object where the authentication result will be stored.
-     * @param request The {@link Request} object containing the HTTP request data.
-     * @param storage The {@link SessionStorage} object containing information stored on the request.
+     * @param result   The {@link AuthResult} object where the authentication result will be stored.
+     * @param exchange The {@link Exchange} object representing the HTTP request.
      */
     @Override
-    public void authenticate(AuthResult result, Request request, SessionStorage storage) {
+    public void authenticate(AuthResult result, Exchange exchange) {
+        final Request request = exchange.request();
+        final SessionStorage storage = exchange.storage();
+
         // Retrieve the authorization header from the request
         String auth_header = request.getHeader(AUTH_HEADER);
 
