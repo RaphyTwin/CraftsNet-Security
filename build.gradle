@@ -15,7 +15,7 @@ dependencies {
     // CraftsBlock dependencies ----------------------------------------------------------------------------------------
 
     implementation "de.craftsblock:craftsnet:3.0.7_14-EXPERIMENTAL"
-    implementation "de.craftsblock:craftscore:3.7.67-SNAPSHOT"
+    implementation "de.craftsblock:craftscore:3.7.69-SNAPSHOT"
 
     // Third party dependencies ----------------------------------------------------------------------------------------
 
