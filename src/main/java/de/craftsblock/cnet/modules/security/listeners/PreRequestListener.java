@@ -46,7 +46,7 @@ public class PreRequestListener implements ListenerAdapter {
             AuthResult result = chain.authenticate(exchange);
 
             // Continue if the authentication was cancelled
-            if (result.isCancelled()) continue;
+            if (!result.isCancelled()) continue;
 
             event.setCancelled(true); // Cancel the event
             authEvent = new AuthFailedEvent(exchange);
