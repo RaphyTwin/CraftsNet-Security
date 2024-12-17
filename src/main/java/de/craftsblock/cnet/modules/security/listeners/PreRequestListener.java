@@ -38,23 +38,25 @@ public class PreRequestListener implements ListenerAdapter {
     public void handleAuthChains(PreRequestEvent event) throws IOException, InvocationTargetException, IllegalAccessException {
         Exchange exchange = event.getExchange();
 
+        GenericAuthResultEvent authEvent = new AuthSuccessEvent(exchange);
+
         // Iterate through each authentication chain
         for (AuthChain chain : CNetSecurity.getAuthChainManager()) {
             // Authenticate the incoming request using the current chain
             AuthResult result = chain.authenticate(exchange);
-            GenericAuthResultEvent authEvent;
 
-            // Check if the authentication was cancelled
-            if (result.isCancelled()) {
-                event.setCancelled(true); // Cancel the event
-                authEvent = new AuthFailedEvent(exchange);
+            // Continue if the authentication was cancelled
+            if (result.isCancelled()) continue;
 
-                // Send an error response back to the client
-                exchange.response().print(Json.empty().set("error", result.getCancelReason()));
-            } else authEvent = new AuthSuccessEvent(exchange);
+            event.setCancelled(true); // Cancel the event
+            authEvent = new AuthFailedEvent(exchange);
 
-            CNetSecurity.callEvent(authEvent);
+            // Send an error response back to the client
+            exchange.response().print(Json.empty().set("error", result.getCancelReason()));
+            break;
         }
+
+        CNetSecurity.callEvent(authEvent);
     }
 
     /**
