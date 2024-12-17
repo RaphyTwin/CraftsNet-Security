@@ -1,7 +1,7 @@
 package de.craftsblock.cnet.modules.security.auth;
 
-import de.craftsblock.cnet.modules.security.utils.Manager;
 import de.craftsblock.cnet.modules.security.auth.chains.AuthChain;
+import de.craftsblock.cnet.modules.security.utils.Manager;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

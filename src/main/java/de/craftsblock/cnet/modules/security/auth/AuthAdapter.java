@@ -2,7 +2,6 @@ package de.craftsblock.cnet.modules.security.auth;
 
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.api.http.Request;
-import de.craftsblock.craftsnet.api.utils.SessionStorage;
 
 /**
  * The {@link AuthAdapter} interface defines the contract for implementing custom authentication mechanisms.

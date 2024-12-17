@@ -2,10 +2,9 @@ package de.craftsblock.cnet.modules.security;
 
 import de.craftsblock.cnet.modules.security.auth.AuthChainManager;
 import de.craftsblock.cnet.modules.security.auth.chains.SimpleAuthChain;
-import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
-import de.craftsblock.cnet.modules.security.utils.Manager;
-import de.craftsblock.craftscore.event.Event;
 import de.craftsblock.cnet.modules.security.auth.token.TokenManager;
+import de.craftsblock.cnet.modules.security.ratelimit.RateLimitManager;
+import de.craftsblock.craftscore.event.Event;
 import de.craftsblock.craftsnet.logging.Logger;
 import org.jetbrains.annotations.ApiStatus;
 

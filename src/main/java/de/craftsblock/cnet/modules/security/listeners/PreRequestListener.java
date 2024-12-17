@@ -1,17 +1,19 @@
 package de.craftsblock.cnet.modules.security.listeners;
 
+import de.craftsblock.cnet.modules.security.CNetSecurity;
 import de.craftsblock.cnet.modules.security.auth.AuthResult;
 import de.craftsblock.cnet.modules.security.auth.chains.AuthChain;
 import de.craftsblock.cnet.modules.security.events.auth.AuthFailedEvent;
 import de.craftsblock.cnet.modules.security.events.auth.AuthSuccessEvent;
 import de.craftsblock.cnet.modules.security.events.auth.GenericAuthResultEvent;
-import de.craftsblock.craftscore.event.*;
+import de.craftsblock.craftscore.event.EventHandler;
+import de.craftsblock.craftscore.event.EventPriority;
+import de.craftsblock.craftscore.event.ListenerAdapter;
 import de.craftsblock.craftscore.json.Json;
 import de.craftsblock.craftsnet.api.annotations.AutoRegister;
 import de.craftsblock.craftsnet.api.http.Exchange;
 import de.craftsblock.craftsnet.events.EventWithCancelReason;
 import de.craftsblock.craftsnet.events.requests.PreRequestEvent;
-import de.craftsblock.cnet.modules.security.CNetSecurity;
 import de.craftsblock.craftsnet.events.requests.routes.RouteRequestEvent;
 import de.craftsblock.craftsnet.events.requests.shares.ShareRequestEvent;
 
@@ -21,6 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * The PreRequestListener class listens for pre-request events and processes
  * authentication chains to determine if an incoming request should be allowed.
+ *
+ * @author Philipp Maywald
+ * @author CraftsBlock
+ * @version 1.0.0
+ * @since 1.0.0-SNAPSHOT
  */
 @AutoRegister
 public class PreRequestListener implements ListenerAdapter {
