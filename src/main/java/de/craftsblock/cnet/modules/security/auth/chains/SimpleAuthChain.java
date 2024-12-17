@@ -50,7 +50,7 @@ public class SimpleAuthChain extends AuthChain {
 
         // Iterate over each adapter in the chain and authenticate the request.
         for (AuthAdapter adapter : adapters) {
-            adapter.authenticate(result, request, storage);
+            adapter.authenticate(result, exchange);
 
             // Stop processing further adapters if the authentication is cancelled.
             if (result.isCancelled()) break;
