@@ -1,5 +1,8 @@
 package de.craftsblock.cnet.modules.security.ratelimit;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -17,7 +20,7 @@ import java.util.Objects;
  * @see Objects
  * @since 1.0.0-SNAPSHOT
  */
-public record RateLimitIndex(Object source) {
+public record RateLimitIndex(@Nullable RateLimitAdapter adapter, @NotNull Object source) {
 
     /**
      * Compares this {@link RateLimitIndex} with another object for equality.
@@ -31,7 +34,12 @@ public record RateLimitIndex(Object source) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RateLimitIndex that = (RateLimitIndex) o;
-        return Objects.equals(this.source, that.source);
+
+        if (this.isGlobal())
+            if (!that.isGlobal() || !Objects.equals(this.adapter(), that.adapter()))
+                return false;
+
+        return Objects.equals(this.source(), that.source());
     }
 
     /**
@@ -46,13 +54,42 @@ public record RateLimitIndex(Object source) {
     }
 
     /**
-     * Factory method to create a new {@link RateLimitIndex} instance.
+     * Checks whether this {@link RateLimitIndex} should be treated globally or
+     * per {@link RateLimitAdapter}.
+     *
+     * @return {@code true} if this {@link RateLimitIndex} should be treated globally,
+     * {@code false} otherwise.
+     */
+    public boolean isGlobal() {
+        return this.adapter() == null;
+    }
+
+    /**
+     * Factory method to create a new global {@link RateLimitIndex} instance,
+     * with an instance of {@link Object} as source.
      *
      * @param source The source object to use as the identifier for the rate limit.
      * @return A new {@link RateLimitIndex} instance wrapping the specified {@link RateLimitIndex#source}.
      */
-    public static RateLimitIndex of(Object source) {
-        return new RateLimitIndex(source);
+    public static RateLimitIndex of(@NotNull Object source) {
+        return new RateLimitIndex(null, source);
+    }
+
+    /**
+     * Factory method to create a new {@link RateLimitIndex} instance,
+     * with an instance of {@link RateLimitAdapter} and an {@link Object} as source.
+     *
+     * <p>
+     * When the {@link RateLimitAdapter} is set to {@code null}, the index should be
+     * treated globally.
+     * </p>
+     *
+     * @param adapter The {@link RateLimitAdapter} that created the index.
+     * @param source  The source object to use as the identifier for the rate limit.
+     * @return A new {@link RateLimitIndex} instance wrapping the specified {@link RateLimitIndex#source}.
+     */
+    public static RateLimitIndex of(@Nullable RateLimitAdapter adapter, @NotNull Object source) {
+        return new RateLimitIndex(adapter, source);
     }
 
 }
