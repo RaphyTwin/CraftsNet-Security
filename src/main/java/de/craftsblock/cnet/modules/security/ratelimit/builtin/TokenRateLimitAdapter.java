@@ -47,7 +47,7 @@ public class TokenRateLimitAdapter extends RateLimitAdapter {
     @Override
     public @Nullable RateLimitIndex adapt(Request request, SessionStorage storage) {
         if (!storage.containsKey("auth.token")) return null;
-        return RateLimitIndex.of(storage.getAsType("auth.token", Token.class));
+        return RateLimitIndex.of(this, storage.getAsType("auth.token", Token.class));
     }
 
 }

@@ -41,7 +41,7 @@ public class IPRateLimitAdapter extends RateLimitAdapter {
      */
     @Override
     public @Nullable RateLimitIndex adapt(Request request, SessionStorage storage) {
-        return RateLimitIndex.of(request.getIp());
+        return RateLimitIndex.of(this, request.getIp());
     }
 
 }
