@@ -111,14 +111,12 @@ public abstract class RateLimitAdapter {
 
     /**
      * Appends rate limit information as HTTP headers to the response of the given {@link Exchange}.
-     * <p>
-     * This method adds the following headers to the response:
+     * <p>This method adds the following headers to the response:</p>
      * <ul>
      *     <li><code>X-RateLimit-Limit</code>: Indicates the maximum number of requests allowed within the rate limit.</li>
      *     <li><code>X-RateLimit-Remaining</code>: Indicates the remaining number of requests that can be made before the rate limit is exceeded.</li>
      *     <li><code>X-RateLimit-Reset</code>: Indicates the time in milliseconds until the rate limit resets.</li>
      * </ul>
-     * </p>
      *
      * @param exchange The {@link Exchange} representing the current HTTP request and response.
      * @param info     The {@link RateLimitInfo} containing the rate limit details for the current request.
